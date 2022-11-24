@@ -5,15 +5,27 @@ import (
 	"net/http"
 
 	"github.com/alwindoss/fragmos"
+	"github.com/alwindoss/fragmos/internal/block"
+	"github.com/alwindoss/fragmos/internal/wallet"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
 func Run(cfg *fragmos.Config) error {
+	w, err := wallet.New()
+	if err != nil {
+		err = fmt.Errorf("unable to create wallet: %w", err)
+		return err
+	}
+	fmt.Printf("Blockchain wallet Address: %s\n", w.BlockchainAddress())
+	return nil
+}
+
+func RunBlockChain(cfg *fragmos.Config) error {
 	fragmos.MINING_DIFFICULTY = cfg.MiningDifficulty
 	fmt.Println("Mining Difficult set to: ", cfg.MiningDifficulty)
 	myBlockchainAddress := "my_fragmos_address"
-	bc := NewBlockchain(myBlockchainAddress)
+	bc := block.NewBlockchain(myBlockchainAddress)
 	// bc.Print()
 	bc.AddTransaction("PersonA", "PersonB", 1.0)
 	bc.Mining()

@@ -1,4 +1,4 @@
-package engine
+package block
 
 import (
 	"crypto/sha256"
